@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cat Facts</title>
+</head>
+<body>
+    <h1>Cat Facts 😺</h1>
+    <button onclick="getFact()">Obtenir un fait sur les chats !</button>
+    <p id="fact"></p>
+
+    <script>
+        function getFact() {
+            fetch('/catfacts/facts')
+            .then(apiAnswer => apiAnswer.json())
+            .then(data => {
+                document.getElementById('/catfacts/facts').innerText = data.fact;
+            })
+            .catch(err => console.error(err));
+        }
+    </script>
+</body>
+</html>
