@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PokéAPI</title>
+</head>
+<body>
+    <h1>Poké API ⚡</h1>
+    <input type="text" id="pokemonName" placeholder="Entrez un Pokémon">
+    <button onclick="getPokemon()">Afficher votre Pokémon</button>
+
+    <h2 id="name"></h2>
+    <img id="sprite" src="" alt="" />
+    <ul id="stats"></ul>
+
+    <p><a href="/">Retour à l'accueil</a></p>
+
+    <script>
+        function getPokemon() {
+            let name = document.getElementById('pokemonName').value;
+            fetch(`/pokeapi/get_pokemon?name=${name}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.error){
+                    alert(data.error);
+                    return;
+                }
+                document.getElementById('name').innerText = data.name;
+                document.getElementById('sprite').src = data.sprite;
+                let statsList = document.getElementById('stats');
+                statsList.innerHTML = "";
+                for (let stat in data.stats) {
+                    let li = document.createElement('li');
+                    li.innerText = `${stat}: ${data.stats[stat]}`;
+                    statsList.appendChild(li);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
