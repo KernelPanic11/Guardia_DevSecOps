@@ -1,0 +1,29 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install black ruff pytest requests
+
+      - name: Lint with Ruff
+        run: ruff .
+
+      - name: Format with Black
+        run: black --check .
+
+      - name: Run tests with pytest
+        run: pytest

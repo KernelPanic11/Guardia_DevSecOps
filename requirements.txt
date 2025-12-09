@@ -1,0 +1,11 @@
+Flask
+requests
+
+# Tests
+pytest
+
+# Formatage
+black
+
+# Lint
+ruff
