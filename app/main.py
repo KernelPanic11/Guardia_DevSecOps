@@ -9,42 +9,55 @@ import requests
 from flask import Flask, render_template, jsonify, request
 
 
-siteweb = Flask(__name__)
+app = Flask(__name__)
 
 
 
-@siteweb.route("/")
+@app.route("/")
 def Home():
     return render_template("index.html") # retourne le body HTTP de type HTML
 
 #----------------------------------------------------------------------------------------------------------------
 
-@siteweb.route("/catfacts_guardia")
+@app.route("/catfacts_guardia")
 def Catfact_home():
     return render_template("catfacts.html")
 
 
-@siteweb.route("/catfacts_guardia/fact")
+@app.route("/catfacts_guardia/fact")
 def Show_catfact():
     maRequestCatfact = requests.get("https://catfact.ninja/fact")
     maRequestCatfact = maRequestCatfact.json()
     return maRequestCatfact
 
-
-
-# @siteweb.route("/catfacts")
-# def catfactHome():
-#     return render_template("catfacts.html") # retourne le body  HTTP de type HTML
-
-# @siteweb.route("/catfacts/fact")
-# def getCatFact():
-#     myCatRequest = requests.get("https://catfact.ninja/fact", timeout=5) # Affiche un json, avec fact: "str" et length: int
-#     myCatRequest = myCatRequest.json() # .json() ouvre l’enveloppe de Response et transforme le body JSON (texte) en dict Python
-#     #print(myCatRequest)
-#     return jsonify(myCatRequest) # transforme le dict Python en JSON texte, crée une réponse HTTP, retourne le body HTTP de type json
-
 # #----------------------------------------------------------------------------------------------------------------
 
+@app.route("/pokeapi")
+def PokeHome():
+    return render_template("pokeapi.html")
+
+
+@app.route("/pokeapi/getPokeInfo")
+def ShowPokemon():
+    pokeRequests = requests.get("https://pokeapi.co/api/v2/pokemon/pikachu")
+    pokeJSON = pokeRequests.json()
+
+    pokeName = pokeJSON["name"]
+    pokeSprite = pokeJSON["sprites"]["front_default"]
+    pokeType = pokeJSON["types"][0]["type"]["name"]
+
+    dictionnaireDeStat = {}
+    for clef_statistics in pokeJSON["stats"]:
+        dictionnaireDeStat[clef_statistics["stat"]["name"]] = clef_statistics["base_stat"]
+
+    dictionnaireFinal = {
+        "name" : pokeName,
+        "type" : pokeType,
+        "sprite" : pokeSprite,
+        "stats" : dictionnaireDeStat
+    }
+
+    return dictionnaireFinal
 
 
 
@@ -56,14 +69,11 @@ def Show_catfact():
 
 
 
-
-
-
-# @siteweb.route("/pokeapi")
+# @app.route("/pokeapi")
 # def pokeapiHome():
 #     return render_template("pokeapi.html")
 
-# @siteweb.route("/pokeapi/getpokemon")
+# @app.route("/pokeapi/getpokemon")
 # def getPokemon():
 #     pokeName = request.args.get("name")
 #     print(pokeName)
@@ -79,8 +89,8 @@ def Show_catfact():
 
 # #----------------------------------------------------------------------------------------------------------------
 
-siteweb.run(host="0.0.0.0", debug=True)
-
+#app.run(debug=True, host="172.17.0.2")
+app.run(debug=True)
 
 
 

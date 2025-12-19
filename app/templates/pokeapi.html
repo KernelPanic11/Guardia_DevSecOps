@@ -2,28 +2,53 @@
 <html>
 <head>
     <title>PokéAPI</title>
+    <link rel="stylesheet" href="../static/pokeapi.css"
 </head>
 <body>
     <h1>Poké API ⚡</h1>
     <input type="text" id="inputPokeName" placeholder="Type your Pokemon's name">
-    <button id="buttonValidate" onclick="getPokemon()">Validate</button>
+    <button id="buttonValidate" onclick="ShowPokemon()">Validate</button>
     
     <p id="pokemonName"></p>
     <p id="pokemonType"></p>
     <p id="pokemonSprite"></p>
+
+    <p id="hp">HP : </p>
+    <p id="attack">Attack : </p>
+    <p id="defense">Defense : </p>
+    <p id="attack-spe">Attack Spé : </p>
+    <p id="defense-spe">Defense Spé : </p>
+    <p id="speed">Speed : </p>
     
     <p><a href="/">Retour à l'accueil</a></p>
 
-    <script>
-        function getPokemon() {
-            const inputPokeName = document.getElementById("inputPokeName").value
 
-            fetch("/pokeapi/getpokemon?name=" + inputPokeName)
-            .then(responseEnvelop => responseEnvelop.json())
-            .then(showPokemon => {
-                console.log(showPokemon)
-                document.getElementById("pokemonName").innerHTML = showPokemon.name
-            });
+
+    <script>
+        function ShowPokemon() {
+            fetch("/pokeapi/getPokeInfo")
+            .then(enveloppHTTP => enveloppHTTP.json())
+            .then(monPetitJSON => {
+                document.getElementById("pokemonName").innerHTML = monPetitJSON.name
+                document.getElementById("pokemonType").innerHTML = monPetitJSON.type
+
+                // Sprite : 
+                const pokeSpriteEnImage = document.createElement('img')
+                pokeSpriteEnImage.src = monPetitJSON.sprite
+                pokeSpriteEnImage.style.width = "250px"
+                pokeSpriteEnImage.style.height = "auto"
+                document.getElementById("pokemonSprite").innerHTML = ""
+                document.getElementById("pokemonSprite").appendChild(pokeSpriteEnImage)
+
+                // Stats : 
+                const pokeHP = monPetitJSON.stats
+                document.getElementById("hp").innerHTML = monPetitJSON.stats["hp"]
+                document.getElementById("attack").innerHTML = monPetitJSON.stats["attack"]
+                document.getElementById("defense").innerHTML = monPetitJSON.stats["defense"]
+                document.getElementById("attack-spe").innerHTML = monPetitJSON.stats["special-attack"]
+                document.getElementById("defense-spe").innerHTML = monPetitJSON.stats["special-defense"]
+                document.getElementById("speed").innerHTML = monPetitJSON.stats["speed"]
+            })
         }
     </script>
 
